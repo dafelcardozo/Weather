@@ -78,12 +78,7 @@ mongo_uri = os.environ['MONGODB_URI']
 print(mongo_uri)
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'djongo',
-        'NAME': 'Weather',
-        'URI':  mongo_uri,
-        'URL': mongo_uri
-    }
+    'default': 'mongodb://heroku_7rkk2cph:3ckkek8ln127g0v4mt3pbj6ncm@ds041347.mlab.com:41347/heroku_7rkk2cph'
 }
 
 # Password validation

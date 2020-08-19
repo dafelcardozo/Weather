@@ -14,6 +14,7 @@ import os
 import django_heroku
 
 
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -74,11 +75,14 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 
 mongo_uri = os.environ['MONGODB_URI']
 
+print(mongo_uri)
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'NAME': 'Weather',
-        'URI':  mongo_uri
+        'URI':  mongo_uri,
+        'URL': mongo_uri
     }
 }
 

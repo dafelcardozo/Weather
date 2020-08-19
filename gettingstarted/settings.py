@@ -72,11 +72,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "gettingstarted.wsgi.application"
 
+mongo_uri = os.environ['MONGODB_URI']
 
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'Weather'
+        'NAME': 'Weather',
+        'URI':  mongo_uri
     }
 }
 

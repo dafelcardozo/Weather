@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h3>A demonstration of how to access a File Upload Button</h3>
+<form action="upload_measurements" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+<input type="file" id="file" name="file">
+
+<p>Click the "Try it" button to disable the file upload button.</p>
+<button type="submit" >Try it</button>
+</form>
+
+</body>
+</html>

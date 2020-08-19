@@ -76,11 +76,9 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 
 mongo_uri = os.environ['MONGODB_URI']
 
-print(mongo_uri)
+print({'mongo_uri': mongo_uri})
 
-DATABASES = {
-    'default': dj_database_url.config(mongo_uri)
-}
+DATABASES['default'] = dj_database_url.config(mongo_uri)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

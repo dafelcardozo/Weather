@@ -80,7 +80,8 @@ print({'mongo_uri': mongo_uri})
 
 DATABASES = dict()
 DATABASES['default'] = dj_database_url.config(mongo_uri)
-DATABASES['engine'] = 'djongo'
+DATABASES['default']['ENGINE'] = 'djongo'
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

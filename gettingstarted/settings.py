@@ -78,6 +78,7 @@ mongo_uri = os.environ['MONGODB_URI']
 
 print({'mongo_uri': mongo_uri})
 
+DATABASES = dict()
 DATABASES['default'] = dj_database_url.config(mongo_uri)
 
 # Password validation

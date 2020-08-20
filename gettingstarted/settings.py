@@ -82,6 +82,8 @@ DATABASES = dict()
 DATABASES['default'] = dj_database_url.config(mongo_uri)
 DATABASES['default']['ENGINE'] = 'djongo'
 
+print('salida')
+print(DATABASES['default'])
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

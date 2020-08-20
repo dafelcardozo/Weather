@@ -76,16 +76,19 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 
 mongo_uri = os.environ['MONGODB_URI']
 
-print({'mongo_uri': mongo_uri})
+#print({'mongo_uri': mongo_uri})
 
 DATABASES = dict()
 DATABASES['default'] = dj_mongo_database_url.parse(mongo_uri)
 DATABASES['default']['ENGINE'] = 'djongo'
-DATABASES['default']['USER'] = 'felipe'
-DATABASES['default']['PASSWORD'] = 'JuanDavid2009'
-
+DATABASES['default']['AUTH_MECHANISM']: 'SCRAM-SHA-1'
+DATABASES['default']['REPLICASET']: 'replicaset'
+DATABASES['default']['SSL']: 'ssl'
+DATABASES['default']['SSL_CERTFILE']: 'ssl_certfile'
+DATABASES['default']['SSL_CA_CERTS']: 'ssl_ca_certs'
+DATABASES['default']['READ_PREFERENCE']: 'read_preference'
 DATABASES['default']['OPTIONS']: {
-    'connect_timeout': 5
+    'connect_timeout': 15
 }
 
 print('salida')

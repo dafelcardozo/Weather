@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import django_heroku
+import mimetypes
 
 
 
@@ -64,7 +65,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        #"DIRS": [os.path.join(BASE_DIR, 'hello/static/dist')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -132,3 +133,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = "/static/"
 
 django_heroku.settings(locals())
+
+
+mimetypes.add_type("text/css", ".css", True)

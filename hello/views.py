@@ -49,6 +49,7 @@ class MeasurementSerializer(serializers.Serializer):
     relative_humidity_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
     relative_humidity_3pm = serializers.DecimalField(decimal_places=12, max_digits=19)
     dataset_name = serializers.CharField()
+    number = serializers.IntegerField()
 
     class Meta:
         model = Measurement

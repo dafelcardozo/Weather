@@ -81,7 +81,9 @@ print({'mongo_uri': mongo_uri})
 DATABASES = dict()
 DATABASES['default'] = dj_mongo_database_url.parse(mongo_uri)
 DATABASES['default']['ENGINE'] = 'djongo'
-
+DATABASES['default']['OPTIONS']: {
+    'connect_timeout': 5
+}
 print('salida')
 print(DATABASES['default'])
 

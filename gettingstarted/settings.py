@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 
 import os
 import django_heroku
-import dj_mongo_database_url
 
 
 
@@ -78,17 +77,16 @@ mongo_uri = os.environ['MONGODB_URI']
 
 #print({'mongo_uri': mongo_uri})
 
-parsed = dj_mongo_database_url.parse(mongo_uri)
-DATABASES = dict(default=dict(**parsed))
-DATABASES['default']['ENGINE'] = 'djongo'
-DATABASES['default']['AUTH_MECHANISM']: 'SCRAM-SHA-1'
-DATABASES['default']['REPLICASET']: 'replicaset'
-DATABASES['default']['SSL']: 'ssl'
-DATABASES['default']['SSL_CERTFILE']: 'ssl_certfile'
-DATABASES['default']['SSL_CA_CERTS']: 'ssl_ca_certs'
-DATABASES['default']['READ_PREFERENCE']: 'read_preference'
-DATABASES['default']['OPTIONS']: {
-    'connect_timeout': 15
+#parsed = dj_mongo_database_url.parse(mongo_uri)
+#DATABASES = dict(default=dict(**parsed))
+DATABASES = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'heroku_7rkk2cph',
+        'CLIENT': {
+            'host': mongo_uri
+        }
+    }
 }
 
 print('salida')

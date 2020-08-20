@@ -26,7 +26,6 @@ def upload_form(request):
     return render(request, 'upload.html')
 
 
-@transaction.atomic
 def upload_measurements(request):
     if request.method == 'POST' and request.FILES['file']:
         file = request.FILES['file']
@@ -41,5 +40,5 @@ def upload_measurements(request):
             m = Measurement(dataset_name='felipe', **d)
             all += (m, )
 
-        Measurement.objects.bulk_create(all)
+        Measurement.objects.bulk_create(all, batch_size=10)
         return HttpResponse('Upload successful!')

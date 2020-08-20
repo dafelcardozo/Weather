@@ -79,7 +79,7 @@ mongo_uri = os.environ['MONGODB_URI']
 #print({'mongo_uri': mongo_uri})
 
 parsed = dj_mongo_database_url.parse(mongo_uri)
-DATABASES = dict(**parsed)
+DATABASES = dict(default=dict(**parsed))
 DATABASES['default']['ENGINE'] = 'djongo'
 DATABASES['default']['AUTH_MECHANISM']: 'SCRAM-SHA-1'
 DATABASES['default']['REPLICASET']: 'replicaset'

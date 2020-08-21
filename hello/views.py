@@ -69,8 +69,8 @@ def aggregate_avg_wind_direction_9am(request):
     cursor = Measurement.objects.mongo_aggregate([{
         '$bucket': {
             'groupBy': '$avg_wind_direction_9am',
-            'boundaries': [0, 45, 90, 135, 180, 225, 270, 315, 360],
-            'default': -1,
+            'boundaries': [n * 45 - 3 * 45 / 2 for n in range(1, 10)],
+            'default': -1000,
             'output': {
                 'outputN': {'$sum': 1}
             }

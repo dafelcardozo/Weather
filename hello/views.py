@@ -3,9 +3,9 @@ from django.http import HttpResponse
 
 from .models import Measurement
 import csv
-from decimal import Decimal
 from rest_framework import routers, serializers, viewsets
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 # Create your views here.
 def index(request):
@@ -34,7 +34,7 @@ def upload_measurements(request):
         for row in reader:
             data = dict(zip(first, row))
             data = {key: value.replace(decimal_separator, '.') for key, value in data.items()}
-            d = {key: Decimal(value) if key != 'number' else int(value) for key, value in data.items() if value}
+            d = {key: float(value) if key != 'number' else int(value) for key, value in data.items() if value}
             m = Measurement(dataset_name=name, **d)
             all += (m, )
 
@@ -43,16 +43,16 @@ def upload_measurements(request):
 
 
 class MeasurementSerializer(serializers.Serializer):
-    air_pressure_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    air_temp_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    avg_wind_direction_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    avg_wind_speed_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    max_wind_direction_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    max_wind_speed_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    rain_accumulation_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    rain_duration_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    relative_humidity_9am = serializers.DecimalField(decimal_places=12, max_digits=19)
-    relative_humidity_3pm = serializers.DecimalField(decimal_places=12, max_digits=19)
+    air_pressure_9am = serializers.FloatField()
+    air_temp_9am = serializers.FloatField()
+    avg_wind_direction_9am = serializers.FloatField()
+    avg_wind_speed_9am = serializers.FloatField()
+    max_wind_direction_9am = serializers.FloatField()
+    max_wind_speed_9am = serializers.FloatField()
+    rain_accumulation_9am = serializers.FloatField()
+    rain_duration_9am = serializers.FloatField()
+    relative_humidity_9am = serializers.FloatField()
+    relative_humidity_3pm = serializers.FloatField()
     dataset_name = serializers.CharField()
     number = serializers.IntegerField()
 
@@ -63,3 +63,19 @@ class MeasurementSerializer(serializers.Serializer):
 class MeasurementsViewSet(viewsets.ModelViewSet):
     queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
+
+
+def aggregate_avg_wind_direction_9am(request):
+    cursor = Measurement.objects.mongo_aggregate([{
+        '$bucket': {
+            'groupBy': '$avg_wind_direction_9am',
+            'boundaries': [0, 45, 90, 135, 180, 225, 270, 315, 360],
+            'default': -1,
+            'output': {
+                'outputN': {'$sum': 1}
+            }
+        }
+    }])
+    result = [d for d in cursor]
+    result = {r['_id']: r['outputN'] for r in result}
+    return HttpResponse(json.dumps(result))

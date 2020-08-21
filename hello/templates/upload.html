@@ -6,10 +6,20 @@
 <form action="upload_measurements" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 <input type="file" id="file" name="file">
+    <input type="hidden" name="name" value="felippeewe" />
+    <input type="hidden" name="column_delimiter" value=";" />
+    <input type="hidden" name="decimal_separator" value=",">
 
 <p>Click the "Try it" button to disable the file upload button.</p>
 <button type="submit" >Try it</button>
 </form>
-
+{
+  'groupBy': '$avg_wind_direction_9am',
+  'boundaries': [ 0, 45, 90, 135, 180, 225, 270, 315, 360  ],
+  'default':  -1,
+  'output': {
+     'outputN': { '$sum': 1 }
+  }
+}
 </body>
 </html>

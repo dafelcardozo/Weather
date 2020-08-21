@@ -18,5 +18,3 @@ class Measurement(models.Model):
 
     objects = models.DjongoManager()
 
-# from django.db.models import Case, IntegerField, Value, When
-# Measurement.objects.annotate(count=Case(When(avg_wind_direction_9am__lt=45, then=Value(1)), default=Value(2), output_field=IntegerField()))

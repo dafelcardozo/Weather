@@ -13,7 +13,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("upload", hello.views.upload_form),
     path("upload_measurements", hello.views.upload_measurements),
-    path('measurements', hello.views.MeasurementsViewSet.as_view({'get': 'list'})),
+    path('all', hello.views.MeasurementsViewSet.as_view({'get': 'list'})),
     path('wind_direction_aggregates', hello.views.wind_direction_aggregates),
-    path('available_months', hello.views.available_months)
+    path('available_months', hello.views.available_months),
+    path('measurements', hello.views.monthly_measurements)
+
 ]

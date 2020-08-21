@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 
 from .models import Measurement
 import csv
@@ -7,6 +7,8 @@ from rest_framework import routers, serializers, viewsets
 from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from rest_framework.renderers import JSONRenderer
 
 # Create your views here.
 def index(request):
@@ -60,6 +62,7 @@ class MeasurementSerializer(serializers.Serializer):
     relative_humidity_3pm = serializers.FloatField()
     dataset_name = serializers.CharField()
     number = serializers.IntegerField()
+    date = serializers.DateField()
 
     class Meta:
         model = Measurement
@@ -101,3 +104,9 @@ def available_months(request):
     result = [(year, month, date(year, month, 1).strftime('%B %Y')) for month, year in months]
     return HttpResponse(json.dumps(result))
 
+
+def monthly_measurements(request):
+    month, year = int(request.GET['month']), int(request.GET['year'])
+    start = date(year, month, 1)
+    measurements = Measurement.objects.filter(date__gte=start, date__lt=start + relativedelta(months=+1))
+    return JsonResponse(MeasurementSerializer(measurements, many=True).data, safe=False)

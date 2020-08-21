@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_extensions'
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -43,8 +44,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'rest_framework',
     'corsheaders',
-    "hello",
-    'django_extensions'
+    "hello"
 ]
 
 MIDDLEWARE = [
@@ -96,9 +96,6 @@ DATABASES = {
         }
     }
 }
-
-print('salida')
-print(DATABASES['default'])
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

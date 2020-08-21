@@ -6,6 +6,7 @@ import csv
 from rest_framework import routers, serializers, viewsets
 from django.views.decorators.csrf import csrf_exempt
 import json
+from datetime import date, datetime, timedelta
 
 # Create your views here.
 def index(request):
@@ -38,6 +39,10 @@ def upload_measurements(request):
             m = Measurement(dataset_name=name, **d)
             all += (m, )
 
+        current_date = date(2011, 9, 14)
+        for m in all:
+            m.date = current_date
+            current_date += timedelta(days=1)
         Measurement.objects.bulk_create(all, batch_size=10)
         return HttpResponse('Upload successful!')
 
@@ -65,10 +70,10 @@ class MeasurementsViewSet(viewsets.ModelViewSet):
     serializer_class = MeasurementSerializer
 
 
-def aggregate_avg_wind_direction_9am(request):
+def wind_direction_aggregate(field):
     cursor = Measurement.objects.mongo_aggregate([{
         '$bucket': {
-            'groupBy': '$avg_wind_direction_9am',
+            'groupBy': '$' + field,
             'boundaries': [n * 45 - 3 * 45 / 2 for n in range(1, 10)],
             'default': -1000,
             'output': {
@@ -76,6 +81,23 @@ def aggregate_avg_wind_direction_9am(request):
             }
         }
     }])
-    result = [d for d in cursor]
-    result = {r['_id']: r['outputN'] for r in result}
+    return {r['_id']: r['outputN'] for r in cursor}
+
+
+def wind_direction_aggregates(request):
+    datasets = dict(avg_wind_direction_9am=wind_direction_aggregate('avg_wind_direction_9am'),
+                    max_wind_direction_9am=wind_direction_aggregate('max_wind_direction_9am'))
+    return HttpResponse(json.dumps(datasets))
+
+
+def available_months(request):
+    cursor = Measurement.objects.mongo_aggregate([{
+        '$group': {
+            '_id': {'month': {'$month': "$date"}, 'year': {'$year': '$date'}},
+            'count_measurements': {'$sum': 1}
+        }
+    }])
+    months = [(m['_id']['month'], m['_id']['year']) for m in cursor]
+    result = [(year, month, date(year, month, 1).strftime('%B %Y')) for month, year in months]
     return HttpResponse(json.dumps(result))
+

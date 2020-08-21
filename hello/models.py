@@ -14,6 +14,7 @@ class Measurement(models.Model):
     relative_humidity_9am = models.FloatField()
     relative_humidity_3pm = models.FloatField()
     dataset_name = models.TextField()
+    date = models.DateField()
 
     objects = models.DjongoManager()
 

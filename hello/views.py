@@ -3,14 +3,13 @@ from django.http import HttpResponse, JsonResponse
 
 from .models import Measurement
 import csv
-from rest_framework import routers, serializers, viewsets
+from rest_framework import serializers, viewsets
 from django.views.decorators.csrf import csrf_exempt
 import json
 from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from rest_framework.renderers import JSONRenderer
 
-# Create your views here.
+
 def index(request):
     return render(request, "index.html")
 
@@ -39,7 +38,7 @@ def upload_measurements(request):
             data = {key: value.replace(decimal_separator, '.') for key, value in data.items()}
             d = {key: float(value) if key != 'number' else int(value) for key, value in data.items() if value}
             m = Measurement(dataset_name=name, **d)
-            all += (m, )
+            all += (m,)
 
         current_date = date(2011, 9, 14)
         for m in all:
@@ -73,23 +72,40 @@ class MeasurementsViewSet(viewsets.ModelViewSet):
     serializer_class = MeasurementSerializer
 
 
-def wind_direction_aggregate(field):
-    cursor = Measurement.objects.mongo_aggregate([{
-        '$bucket': {
-            'groupBy': '$' + field,
-            'boundaries': [n * 45 - 3 * 45 / 2 for n in range(1, 10)],
-            'default': -1000,
-            'output': {
-                'outputN': {'$sum': 1}
+def wind_direction_aggregate(month, year, field):
+    cursor = Measurement.objects.mongo_aggregate([
+        {
+            '$project': {
+                'year': {
+                    '$year': "$date",
+                },
+                'month': {
+                    '$month': '$date'
+                },
+                'avg_wind_direction_9am': '$avg_wind_direction_9am'
+            }
+        },
+        {
+            '$match': {"year": year, 'month': month}
+        },
+        {
+            '$bucket': {
+                'groupBy': '$' + field,
+                'boundaries': [n * 45 - 3 * 45 / 2 for n in range(1, 9)],
+                'default': -1000,
+                'output': {
+                    'outputN': {'$sum': 1}
+                }
             }
         }
-    }])
+    ])
     return {r['_id']: r['outputN'] for r in cursor}
 
 
 def wind_direction_aggregates(request):
-    datasets = dict(avg_wind_direction_9am=wind_direction_aggregate('avg_wind_direction_9am'),
-                    max_wind_direction_9am=wind_direction_aggregate('max_wind_direction_9am'))
+    month, year = int(request.GET['month']), int(request.GET['year'])
+    datasets = dict(avg_wind_direction_9am=wind_direction_aggregate(month, year, 'avg_wind_direction_9am'),
+                    max_wind_direction_9am=wind_direction_aggregate(month, year, 'max_wind_direction_9am'))
     return HttpResponse(json.dumps(datasets))
 
 

@@ -129,4 +129,6 @@ def monthly_measurements(request):
 
 
 def today_prediction(request):
-    return HttpResponse(dict(humidity=10, temperature=30, pressure=30, wind_direction='NE'))
+    prediction = dict(humidity=10, temperature=30, pressure=30, wind_direction='NE', wind_speed=15,
+                      phrase="It's always sunny in Philadelphia!", desc='Sunny')
+    return HttpResponse(json.dumps(prediction))

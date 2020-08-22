@@ -44,7 +44,7 @@ def upload_measurements(request):
         for m in all:
             m.date = current_date
             current_date += timedelta(days=1)
-        Measurement.objects.bulk_create(all, batch_size=10)
+        Measurement.objects.bulk_create(all, batch_size=200)
         return HttpResponse('Upload successful!')
 
 

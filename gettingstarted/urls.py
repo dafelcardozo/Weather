@@ -16,6 +16,6 @@ urlpatterns = [
     path('all', hello.views.MeasurementsViewSet.as_view({'get': 'list'})),
     path('wind_direction_aggregates', hello.views.wind_direction_aggregates),
     path('available_months', hello.views.available_months),
-    path('measurements', hello.views.monthly_measurements)
-
+    path('measurements', hello.views.monthly_measurements),
+    path('today_prediction', hello.views.today_prediction)
 ]

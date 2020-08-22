@@ -82,7 +82,7 @@ def wind_direction_aggregate(month, year, field):
                 'month': {
                     '$month': '$date'
                 },
-                'avg_wind_direction_9am': '$avg_wind_direction_9am'
+                field: '$'+field
             }
         },
         {
@@ -126,3 +126,7 @@ def monthly_measurements(request):
     start = date(year, month, 1)
     measurements = Measurement.objects.filter(date__gte=start, date__lt=start + relativedelta(months=+1))
     return JsonResponse(MeasurementSerializer(measurements, many=True).data, safe=False)
+
+
+def today_prediction(request):
+    return HttpResponse(dict(humidity=10, temperature=30, pressure=30, wind_direction='NE'))

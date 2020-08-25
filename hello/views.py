@@ -6,7 +6,7 @@ import csv
 from rest_framework import serializers, viewsets
 from django.views.decorators.csrf import csrf_exempt
 import json
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
 
 
@@ -50,23 +50,10 @@ def upload_measurements(request):
         return HttpResponse('Upload successful!')
 
 
-class MeasurementSerializer(serializers.Serializer):
-    air_pressure_9am = serializers.FloatField()
-    air_temp_9am = serializers.FloatField()
-    avg_wind_direction_9am = serializers.FloatField()
-    avg_wind_speed_9am = serializers.FloatField()
-    max_wind_direction_9am = serializers.FloatField()
-    max_wind_speed_9am = serializers.FloatField()
-    rain_accumulation_9am = serializers.FloatField()
-    rain_duration_9am = serializers.FloatField()
-    relative_humidity_9am = serializers.FloatField()
-    relative_humidity_3pm = serializers.FloatField()
-    dataset_name = serializers.CharField()
-    number = serializers.IntegerField()
-    date = serializers.DateField()
-
+class MeasurementSerializer(serializers.ModelSerializer):
     class Meta:
         model = Measurement
+        fields = '__all__'
 
 
 class MeasurementsViewSet(viewsets.ModelViewSet):

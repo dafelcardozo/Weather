@@ -15,7 +15,6 @@ import django_heroku
 import mimetypes
 
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -66,7 +65,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        #"DIRS": [os.path.join(BASE_DIR, 'hello/static/dist')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -83,10 +81,6 @@ WSGI_APPLICATION = "gettingstarted.wsgi.application"
 
 mongo_uri = os.environ['MONGODB_URI']
 
-#print({'mongo_uri': mongo_uri})
-
-#parsed = dj_mongo_database_url.parse(mongo_uri)
-#DATABASES = dict(default=dict(**parsed))
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',

@@ -10,5 +10,5 @@ It uses:
 
 - Python 3.7 with the 
 - Django and the Django Rest Framework (DRF) views.
-- A Mongo database queried through the Djongo mapper.
+- A Mongo database queried through the Djongo mapper (currently through the mLab plugin). 
 - queries and views were developed with a Jupyter Shell_plus interpreter

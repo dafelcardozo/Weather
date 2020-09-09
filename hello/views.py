@@ -117,6 +117,13 @@ def monthly_measurements(request):
     return JsonResponse(MeasurementSerializer(measurements, many=True).data, safe=False)
 
 
+def field_measurements(request):
+    month, year, field = int(request.GET['month']), int(request.GET['year']), request.GET['field']
+    start = date(year, month, 1)
+    measurements = Measurement.objects.filter(date__gte=start, date__lt=start + relativedelta(months=+1))
+    return HttpResponse(json.dumps(dict(field=field, data=list(measurements.values_list(field, flat=True)))))
+
+
 def today_prediction(request):
     prediction = dict(humidity=10, temperature=30, pressure=30, wind_direction='NE', wind_speed=15,
                       phrase="It's always sunny in Philadelphia!", desc='Sunny')

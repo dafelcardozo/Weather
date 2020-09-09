@@ -17,5 +17,6 @@ urlpatterns = [
     path('wind_direction_aggregates', hello.views.wind_direction_aggregates),
     path('available_months', hello.views.available_months),
     path('measurements', hello.views.monthly_measurements),
-    path('today_prediction', hello.views.today_prediction)
+    path('today_prediction', hello.views.today_prediction),
+    path('field_measurements', hello.views.field_measurements)
 ]

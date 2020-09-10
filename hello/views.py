@@ -121,7 +121,7 @@ def field_measurements(request):
     month, year, field = int(request.GET['month']), int(request.GET['year']), request.GET['field']
     start = date(year, month, 1)
     measurements = Measurement.objects.filter(date__gte=start, date__lt=start + relativedelta(months=+1))
-    return HttpResponse(json.dumps(dict(field=field, data=list(measurements.values_list(field, flat=True)))))
+    return JsonResponse(dict(field=field, data=list(measurements.values_list(field, flat=True))))
 
 
 def today_prediction(request):

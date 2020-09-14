@@ -32,21 +32,19 @@ def upload_measurements(request):
         decoded_file = file.read().decode('utf-8').splitlines()
         reader = csv.reader(decoded_file, delimiter=column_delimiter)
         first = next(reader)
-        all = []
-        for row in reader:
-            data = dict(zip(first, row))
-            data = {key: value.replace(decimal_separator, '.') for key, value in data.items()}
-            d = {key: float(value) if key != 'number' else int(value) for key, value in data.items() if value}
-            m = Measurement(dataset_name=name, **d)
-            all += (m,)
 
-        current_date = date(2011, 9, 14)
-        for m in all:
-            m.date = current_date
-            current_date += timedelta(days=1)
+        def read_measurements():
+            current_date = date(2011, 9, 13)
+            for row in reader:
+                data = dict(zip(first, row))
+                data = {key: value.replace(decimal_separator, '.') for key, value in data.items()}
+                d = {key: float(value) if key != 'number' else int(value) for key, value in data.items() if value}
+                current_date += timedelta(days=1)
+                yield Measurement(dataset_name=name, date=current_date, **d)
 
+        measurements = read_measurements()
         Measurement.objects.all().delete()
-        Measurement.objects.bulk_create(all, batch_size=200)
+        Measurement.objects.bulk_create(measurements, batch_size=200)
         return HttpResponse('Upload successful!')
 
 
